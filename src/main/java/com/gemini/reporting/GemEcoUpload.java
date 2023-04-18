@@ -220,6 +220,7 @@ public class GemEcoUpload {
                     System.out.println("Jewel enter-point GET Status : " + response.getStatus());
                     logger.warn("INVALID JEWEL Credentials. Either remove the jewel Keys or provide correct credentials");
                     System.out.println("INVALID JEWEL Credentials. Either remove the jewel Keys or provide correct credentials");
+                    System.out.flush();
                     System.exit(0);
                 }
             } catch (Exception e) {

@@ -138,10 +138,10 @@ public class GemJarUtils implements GemJarConstants {
         GemJarGlobalVar.testCasesToRun = getTestCasesToRunFromSystemProperties();
         GemJarGlobalVar.createLocalReport = getLocalReportCreateStatus();
         GemEcoUpload.setUpJewelURLs();
-        if (!GemJarGlobalVar.cucumberFlag) {
-            GemJarGlobalVar.testCaseFileName = getTestCAseFileName();
-            TestCaseData.setProjectTestCaseData(GemJarGlobalVar.resourcemap.get(GemJarGlobalVar.testCaseFileName).getContentAsString());
-        }
+//        if (!GemJarGlobalVar.cucumberFlag) {
+//            GemJarGlobalVar.testCaseFileName = getTestCAseFileName();
+//            TestCaseData.setProjectTestCaseData(GemJarGlobalVar.resourcemap.get(GemJarGlobalVar.testCaseFileName).getContentAsString());
+//        }
 
     }
 

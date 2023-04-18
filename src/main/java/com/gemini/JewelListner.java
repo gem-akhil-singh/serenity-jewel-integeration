@@ -3,14 +3,12 @@ package com.gemini;
 
 import com.gemini.reporting.GemTestReporter;
 import com.gemini.reporting.STATUS;
-import com.gemini.utils.GemJarConstants;
 import com.gemini.utils.GemJarGlobalVar;
 import net.thucydides.core.model.*;
 import net.thucydides.core.steps.ExecutedStepDescription;
 import net.thucydides.core.steps.StepFailure;
 import net.thucydides.core.steps.StepListener;
 
-import java.security.PublicKey;
 import java.util.*;
 
 import static com.gemini.utils.GemJarUtils.initializeGemJARGlobalVariables;
@@ -38,15 +36,24 @@ public class JewelListner implements StepListener {
 
     public static String sRunID = UUID.randomUUID().toString();
     public static boolean suiteRunFlag = true;
+  public static boolean initialiseGemJarGlobalVar = true;
     public void testSuiteStarted(Story story) {
 
       //  System.out.println("This runs first testSuite started with only story");
+      {
+          if(initialiseGemJarGlobalVar){
         try{
+
            initializeGemJARGlobalVariables();
+            initialiseGemJarGlobalVar=false;
         }
         catch (Exception e){
-            System.out.println("Exception in loading values ");
-        }
+            if(initialiseGemJarGlobalVar)
+                    System.out.println("Exception in loading values ");
+                initialiseGemJarGlobalVar=false;
+        }}}
+
+
         GemJarGlobalVar.s_run_id=sRunID;
         if(suiteRunFlag==true){
           //  System.out.println("Inside Flag Check");
@@ -72,8 +79,10 @@ public class JewelListner implements StepListener {
     }
 
     public void testStarted(String description, String id) {
+        int separatorIdx = id.indexOf(";");
+        String category = id.substring(0,separatorIdx);
 
-      GemTestReporter.startTestCase(description.toString(),"On Demand",false);
+      GemTestReporter.startTestCase(description.toString(),category,false);
       //  System.out.println("Test Started + ID  " + description );
         // Not used by listener
     }
@@ -81,8 +90,8 @@ public class JewelListner implements StepListener {
     public void testFinished(TestOutcome result) {
 
         List<TestStep> testSteps = new ArrayList<>();
-        testSteps = result.getTestSteps().get(0).getChildren();
-        TestStep test  = new TestStep();
+        testSteps = result.getTestSteps();
+     //   TestStep test  = new TestStep();
       //for each test step get the steps
         for (TestStep testStep : testSteps) {
            List<TestStep> serenitySteps =  testStep.getChildren();
@@ -90,19 +99,18 @@ public class JewelListner implements StepListener {
             String stepDescription;
            if(testStep.getException()!=null || !Objects.equals(testStep.getErrorMessage(), ""))
                stepDescription = testStep.getErrorMessage();
-           else
-             stepDescription = testStep.getChildren().toString().substring(1,testStep.getChildren().toString().length()-1);
-          //add code for screenshot count and push the screenshot
-           GemTestReporter.addTestStep(testStep.getDescription(),stepDescription ,getStatus(testStep),testStep.getLastScreenshot().getScreenshot().toString());
+           else {
+               stepDescription = testStep.getChildren().toString().substring(1, testStep.getChildren().toString().length() - 1);
+           }
+            System.out.println("");
+
+            GemTestReporter.addTestStep(testStep.getDescription(),stepDescription ,getStatus(testStep),testStep.getLastScreenshot().getScreenshot().toString());
+
         }
         GemTestReporter.endTestCase();
-       // System.out.println(result.getResult());
-        //System.out.println("test finished");
-        //System.out.println(result.toString());
-       // TestRecorder recorder = TestRecorder.forTest(result);
-        //recorder.record(result);
-       // logStorage.clean();
+      //before Add test Step Codefor Multip Screenshots will be handled
     }
+
 
     private STATUS getStatus(TestStep testStep) {
         TestResult result = testStep.getResult();
