@@ -153,7 +153,7 @@ public class GemJarUtils implements GemJarConstants {
         return GemJarGlobalVar.createLocalReport;
     }
 
-    private static String getS_Run_id() {
+    public static String getS_Run_id() {
         String s_run_id_FromArguments = System.getProperty(GemJarConstants.S_RUN_ID);
         String s_run_id_fromProjectNameEnvironment = GemJarGlobalVar.projectName + "_" + GemJarGlobalVar.environment.toUpperCase() + "_" + UUID.randomUUID();
         return s_run_id_FromArguments != null ? s_run_id_FromArguments : s_run_id_fromProjectNameEnvironment;
